@@ -1,7 +1,9 @@
 package com.bookamovie.be.controller;
 
+import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
 import com.bookamovie.be.model.UserView;
+import com.bookamovie.be.repository.RoleRepository;
 import com.bookamovie.be.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {
@@ -28,6 +32,8 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private RoleRepository roleRepository;
+
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserView userView){
         if(userRepository.existsByUsername(userView.getUsername())){
@@ -37,7 +43,9 @@ public class AuthController {
         User user = new User();
         user.setUsername(userView.getUsername());
         user.setPassword(passwordEncoder.encode(userView.getPassword()));
-        user.setRole("user");
+
+        Role roles = roleRepository.findByName("ROLE_USER").get();
+        user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
 
