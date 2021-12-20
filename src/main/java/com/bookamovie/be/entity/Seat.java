@@ -5,18 +5,14 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
 @Data
-public class Role {
-
+@Table(name = "seats")
+public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(length = 60)
+    @Column(nullable = false)
     private String name;
 
-    public Role(String name){
-        this.name = name;
-    }
 }
