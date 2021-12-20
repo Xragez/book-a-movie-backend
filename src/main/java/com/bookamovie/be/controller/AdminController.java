@@ -1,7 +1,8 @@
 package com.bookamovie.be.controller;
 
 import com.bookamovie.be.entity.ShowTime;
-import com.bookamovie.be.model.ShowTimeRequest;
+import com.bookamovie.be.mapper.ApiMapper;
+import com.bookamovie.be.view.ShowTimeRequest;
 import com.bookamovie.be.repository.ShowTimeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final ShowTimeRepository showTimeRepository;
+    private final ApiMapper apiMapper;
 
     @PostMapping("showtime")
     public ResponseEntity<ShowTime> newShowTime(@RequestBody ShowTimeRequest showTimeRequest) {
-        val result = showTimeRepository.save(showTimeRequest);
+        val result = showTimeRepository.save(apiMapper.showTime(showTimeRequest));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

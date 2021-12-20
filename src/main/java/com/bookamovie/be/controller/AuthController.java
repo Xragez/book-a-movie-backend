@@ -2,7 +2,7 @@ package com.bookamovie.be.controller;
 
 import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
-import com.bookamovie.be.model.UserRequest;
+import com.bookamovie.be.view.UserRequest;
 import com.bookamovie.be.repository.RoleRepository;
 import com.bookamovie.be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

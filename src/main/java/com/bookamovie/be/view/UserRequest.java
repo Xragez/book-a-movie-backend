@@ -1,4 +1,4 @@
-package com.bookamovie.be.model;
+package com.bookamovie.be.view;
 
 import lombok.Data;
 

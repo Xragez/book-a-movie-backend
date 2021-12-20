@@ -1,11 +1,11 @@
-package com.bookamovie.be.model;
+package com.bookamovie.be.view;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class ShowTimeResponse {
+public class ShowTimeRequest {
     private String movieId;
     private Date date;
     private Date time;
