@@ -6,8 +6,12 @@ import com.bookamovie.be.entity.User;
 import com.bookamovie.be.view.ShowTimeRequest;
 import com.bookamovie.be.view.ShowTimeResponse;
 import com.bookamovie.be.view.TicketRequest;
+import com.bookamovie.be.view.TicketResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface ApiMapper {
@@ -18,4 +22,7 @@ public interface ApiMapper {
     @Mapping(target = "id", ignore = true)
     Ticket ticket(TicketRequest ticketRequest, ShowTime showTime, User user);
 
+    TicketResponse ticketResponse(Ticket ticket);
+
+    List<TicketResponse> ticketsResponse(Set<Ticket> tickets);
 }

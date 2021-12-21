@@ -2,16 +2,21 @@ package com.bookamovie.be.controller;
 
 import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
+import com.bookamovie.be.service.JwtService;
+import com.bookamovie.be.service.UserService;
 import com.bookamovie.be.view.UserRequest;
 import com.bookamovie.be.repository.RoleRepository;
 import com.bookamovie.be.repository.UserRepository;
+import com.bookamovie.be.view.UserResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +34,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final UserService userService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest){
@@ -39,22 +46,35 @@ public class AuthController {
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        val match = passwordEncoder.matches(userRequest.getPassword(), passwordEncoder.encode(userRequest.getPassword()));
+
+        System.out.println(userRequest.getPassword());
+        System.out.println(passwordEncoder.encode(userRequest.getPassword()));
+        System.out.println(match);
 
         Role roles = roleRepository.findByName("ROLE_USER").orElseThrow();
         user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
 
-        return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody UserRequest userRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userRequest.getUsername(), userRequest.getPassword()
-        ));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public ResponseEntity<UserResponse> authenticateUser(@RequestBody UserRequest userRequest) throws Exception {
 
-        return new ResponseEntity<>("User signed-in successfully!", HttpStatus.OK);
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    userRequest.getUsername(), userRequest.getPassword()
+            ));
+        }catch (BadCredentialsException e){
+            throw new Exception("Incorrect username or password", e);
+        }
+
+        val userDetails = userService.loadUserByUsername(userRequest.getUsername());
+
+        val token = jwtService.generateToken(userDetails);
+
+        return ResponseEntity.ok(new UserResponse(token));
     }
 }

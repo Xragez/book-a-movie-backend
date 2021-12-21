@@ -8,6 +8,7 @@ import com.bookamovie.be.view.ShowTimeResponse;
 import com.bookamovie.be.repository.ShowTimeRepository;
 import com.bookamovie.be.repository.UserRepository;
 import com.bookamovie.be.view.TicketRequest;
+import com.bookamovie.be.view.TicketResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -53,10 +54,10 @@ public class UserController {
         return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
 
-    @GetMapping("/tickets/{id}")
-    public ResponseEntity<List<Ticket>> getUserTickets(@PathVariable Long id) {
-        val user = userRepository.findById(id).orElseThrow();
-        val tickets = user.getTickets();
-        return new ResponseEntity<>(List.copyOf(tickets), HttpStatus.OK);
+    @GetMapping("/tickets")
+    public ResponseEntity<List<TicketResponse>> getUserTickets(@RequestParam Long userId) {
+        val user = userRepository.findById(userId).orElseThrow();
+        val tickets = apiMapper.ticketsResponse(user.getTickets());
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 }

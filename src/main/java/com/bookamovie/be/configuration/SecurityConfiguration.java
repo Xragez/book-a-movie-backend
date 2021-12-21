@@ -1,5 +1,8 @@
 package com.bookamovie.be.configuration;
 
+import com.bookamovie.be.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,8 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -28,16 +33,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers( "/**").permitAll()
-                .antMatchers("/api/auth/**").permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .authenticated();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.userDetailsService(userService);
     }
 
     @Override

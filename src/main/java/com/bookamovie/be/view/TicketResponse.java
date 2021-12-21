@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TicketsResponse {
-    private List<Seat> seats;
+public class TicketResponse {
+    private List<SeatVIew> seats;
     private ShowTimeResponse showTime;
 }

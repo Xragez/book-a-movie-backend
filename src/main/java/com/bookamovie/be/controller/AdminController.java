@@ -18,13 +18,13 @@ public class AdminController {
     private final ShowTimeRepository showTimeRepository;
     private final ApiMapper apiMapper;
 
-    @PostMapping("showtime")
+    @PostMapping("/showtime")
     public ResponseEntity<ShowTime> newShowTime(@RequestBody ShowTimeRequest showTimeRequest) {
         val result = showTimeRepository.save(apiMapper.showTime(showTimeRequest));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("showtime/{id}")
+    @DeleteMapping("/showtime/{id}")
     public ResponseEntity<String> deleteShowTime(@PathVariable Long id){
         showTimeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
