@@ -48,10 +48,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         val match = passwordEncoder.matches(userRequest.getPassword(), passwordEncoder.encode(userRequest.getPassword()));
 
-        System.out.println(userRequest.getPassword());
-        System.out.println(passwordEncoder.encode(userRequest.getPassword()));
-        System.out.println(match);
-
         Role roles = roleRepository.findByName("ROLE_USER").orElseThrow();
         user.setRoles(Collections.singleton(roles));
 
