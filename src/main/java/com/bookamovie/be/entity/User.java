@@ -1,13 +1,17 @@
 package com.bookamovie.be.entity;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "users")
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +31,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
+
+    public User(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.roles = Collections.singleton(role);
+    }
 }

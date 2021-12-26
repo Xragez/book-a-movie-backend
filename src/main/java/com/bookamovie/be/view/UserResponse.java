@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 public class UserResponse {
-    private String jwt;
+    private String token;
 }

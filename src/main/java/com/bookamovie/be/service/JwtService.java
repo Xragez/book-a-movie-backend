@@ -27,7 +27,9 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+        val roles = userDetails.getAuthorities();
         Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
         return createToken(claims, userDetails.getUsername());
     }
 

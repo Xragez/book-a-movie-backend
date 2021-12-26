@@ -2,11 +2,11 @@ package com.bookamovie.be.controller;
 
 import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
+import com.bookamovie.be.repository.RoleRepository;
+import com.bookamovie.be.repository.UserRepository;
 import com.bookamovie.be.service.JwtService;
 import com.bookamovie.be.service.UserService;
 import com.bookamovie.be.view.UserRequest;
-import com.bookamovie.be.repository.RoleRepository;
-import com.bookamovie.be.repository.UserRepository;
 import com.bookamovie.be.view.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -15,13 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -37,17 +32,16 @@ public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest){
-        if(userRepository.existsByUsername(userRequest.getUsername())){
+    public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest) {
+        if (userRepository.existsByUsername(userRequest.getUsername())) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        val match = passwordEncoder.matches(userRequest.getPassword(), passwordEncoder.encode(userRequest.getPassword()));
-
         Role roles = roleRepository.findByName("ROLE_USER").orElseThrow();
         user.setRoles(Collections.singleton(roles));
 
@@ -56,6 +50,7 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public ResponseEntity<UserResponse> authenticateUser(@RequestBody UserRequest userRequest) throws Exception {
 
@@ -63,7 +58,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userRequest.getUsername(), userRequest.getPassword()
             ));
-        }catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 

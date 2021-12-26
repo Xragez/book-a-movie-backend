@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,8 +30,14 @@ public class UserController {
     private final ApiMapper apiMapper;
 
     @GetMapping("/showtime/{id}")
-    public ResponseEntity<ShowTimeResponse> getShowTIme(@PathVariable Long id) {
+    public ResponseEntity<ShowTimeResponse> getShowTime(@PathVariable Long id) {
         val response = showTimeRepository.findById(id).orElseThrow();
+        return new ResponseEntity<>(apiMapper.showTimeResponse(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/showtime")
+    public ResponseEntity<ShowTimeResponse> getShowTimeByMovieId(@RequestParam String movieId) {
+        val response = showTimeRepository.findByMovieId(movieId);
         return new ResponseEntity<>(apiMapper.showTimeResponse(response), HttpStatus.OK);
     }
 
