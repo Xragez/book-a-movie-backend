@@ -1,5 +1,6 @@
 package com.bookamovie.be.controller;
 
+import com.bookamovie.be.constraint.ValidPassword;
 import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
 import com.bookamovie.be.repository.RoleRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -34,11 +36,11 @@ public class AuthController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest) {
+    @Validated
+    public ResponseEntity<String> registerUser(@RequestBody UserRequest userRequest) throws Exception {
         if (userRepository.existsByUsername(userRequest.getUsername())) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            throw new Exception("Username is already taken!");
         }
-
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));

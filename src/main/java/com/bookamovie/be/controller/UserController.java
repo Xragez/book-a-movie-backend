@@ -52,12 +52,12 @@ public class UserController {
     }
 
     @PostMapping("/tickets")
-    public ResponseEntity<Ticket> addTicket(@RequestBody TicketRequest ticketRequest) {
+    public ResponseEntity<Ticket> addTicket(@RequestBody TicketRequest ticketRequest) throws Exception {
         val seats = new HashSet<Seat>();
         ticketRequest.getSeats().forEach(seat -> seats.add(seatRepository.findByName(seat.getName())));
         for(val seat: seats){
             if(showtimeService.getTakenSeats(ticketRequest.getShowTimeId()).contains(seat)){
-                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new Exception("At least one chosen seat is not available.");
             }
         }
         val showTime = showTimeRepository.findById(ticketRequest.getShowTimeId()).orElseThrow();
