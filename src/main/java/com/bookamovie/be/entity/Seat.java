@@ -1,11 +1,16 @@
 package com.bookamovie.be.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Setter
+@Getter
+@RequiredArgsConstructor
 @Table(name = "seats")
 public class Seat {
     @Id

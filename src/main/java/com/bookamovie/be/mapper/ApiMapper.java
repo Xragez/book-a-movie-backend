@@ -1,5 +1,6 @@
 package com.bookamovie.be.mapper;
 
+import com.bookamovie.be.entity.Seat;
 import com.bookamovie.be.entity.ShowTime;
 import com.bookamovie.be.entity.Ticket;
 import com.bookamovie.be.entity.User;
@@ -18,9 +19,6 @@ public interface ApiMapper {
     ShowTimeResponse showTimeResponse(ShowTime showTime);
 
     ShowTime showTime(ShowTimeRequest showTimeRequest);
-
-    @Mapping(target = "id", ignore = true)
-    Ticket ticket(TicketRequest ticketRequest, ShowTime showTime, User user);
 
     TicketResponse ticketResponse(Ticket ticket);
 

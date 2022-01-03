@@ -1,13 +1,19 @@
 package com.bookamovie.be.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@RequiredArgsConstructor
 @Table(name = "showtimes")
 public class ShowTime {
 
@@ -19,12 +25,10 @@ public class ShowTime {
     private String movieId;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIME)
-    private Date time;
+    private String time;
 
     @OneToMany(mappedBy = "showTime", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;

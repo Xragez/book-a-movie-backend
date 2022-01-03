@@ -1,7 +1,9 @@
 package com.bookamovie.be.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -9,7 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "users")
 @RequiredArgsConstructor
 public class User {
