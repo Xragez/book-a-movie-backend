@@ -1,21 +1,26 @@
 package com.bookamovie.be.service;
 
+import com.bookamovie.be.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     private final String SECRET_KEY = "fsdfadsdf";
+    private final UserRepository userRepository;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -27,9 +32,15 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        val roles = userDetails.getAuthorities();
+        val authorities = userDetails.getAuthorities();
+        val roles = new ArrayList<>();
+        for(val authority: authorities){
+            roles.add(authority.getAuthority());
+        }
+        val user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
+        claims.put("userId", user.getId());
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -42,7 +53,6 @@ public class JwtService {
         return Jwts.builder().setClaims(claims)
                              .setSubject(subject)
                              .setIssuedAt(new Date(System.currentTimeMillis()))
-                             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                              .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 

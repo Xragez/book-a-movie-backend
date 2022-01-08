@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 public class ShowTimeRequest {
     private String movieId;
+    private String movieTitle;
     private LocalDate date;
     private String time;
 }

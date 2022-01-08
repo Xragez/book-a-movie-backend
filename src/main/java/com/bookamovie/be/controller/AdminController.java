@@ -19,12 +19,14 @@ public class AdminController {
     private final ShowTimeRepository showTimeRepository;
     private final ApiMapper apiMapper;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/showtime")
     public ResponseEntity<ShowTime> newShowTime(@RequestBody ShowTimeRequest showTimeRequest) {
         val result = showTimeRepository.save(apiMapper.showTime(showTimeRequest));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/showtime/{id}")
     public ResponseEntity<String> deleteShowTime(@PathVariable Long id){
         showTimeRepository.deleteById(id);

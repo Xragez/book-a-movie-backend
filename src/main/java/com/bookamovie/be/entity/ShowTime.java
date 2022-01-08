@@ -23,6 +23,9 @@ public class ShowTime {
     private String movieId;
 
     @Column(nullable = false)
+    private String movieTitle;
+
+    @Column(nullable = false)
     private LocalDate date;
 
     @Column(nullable = false)
