@@ -3,6 +3,7 @@ package com.bookamovie.be.controller;
 import com.bookamovie.be.constraint.ValidPassword;
 import com.bookamovie.be.entity.Role;
 import com.bookamovie.be.entity.User;
+import com.bookamovie.be.mapper.ApiMapper;
 import com.bookamovie.be.repository.RoleRepository;
 import com.bookamovie.be.repository.UserRepository;
 import com.bookamovie.be.service.JwtService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final UserService userService;
     private final JwtService jwtService;
+    private final ApiMapper apiMapper;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
@@ -43,6 +46,8 @@ public class AuthController {
         }
         User user = new User();
         user.setUsername(userRequest.getUsername());
+        user.setFirstName(userRequest.getFirstName());
+        user.setSurname(userRequest.getSurname());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         Role roles = roleRepository.findByName("ROLE_USER").orElseThrow();
         user.setRoles(Collections.singleton(roles));
@@ -55,19 +60,17 @@ public class AuthController {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public ResponseEntity<UserResponse> authenticateUser(@RequestBody UserRequest userRequest) throws Exception {
-
+        UserDetails userDetails;
         try {
+            userDetails = userService.loadUserByUsername(userRequest.getUsername());
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userRequest.getUsername(), userRequest.getPassword()
             ));
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
-
-        val userDetails = userService.loadUserByUsername(userRequest.getUsername());
-
         val token = jwtService.generateToken(userDetails);
 
-        return ResponseEntity.ok(new UserResponse(token));
+        return ResponseEntity.ok(apiMapper.userResponse(token));
     }
 }

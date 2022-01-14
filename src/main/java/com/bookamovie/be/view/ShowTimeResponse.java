@@ -9,6 +9,7 @@ import java.util.Date;
 public class ShowTimeResponse {
     private String id;
     private String movieId;
+    private String movieTitle;
     private LocalDate date;
     private String time;
 }

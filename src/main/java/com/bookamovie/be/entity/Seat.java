@@ -19,4 +19,7 @@ public class Seat {
     @Column(nullable = false)
     private String name;
 
+    public Seat(String name){
+        this.name = name;
+    }
 }

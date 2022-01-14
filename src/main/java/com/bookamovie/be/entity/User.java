@@ -3,10 +3,8 @@ package com.bookamovie.be.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -19,6 +17,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String firstName;
+
+    @Column(nullable = false, length = 100)
+    private String surname;
 
     @Column(nullable = false, unique = true, length = 60)
     private String username;
@@ -34,10 +38,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
-
-    public User(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.roles = Collections.singleton(role);
-    }
+    
 }

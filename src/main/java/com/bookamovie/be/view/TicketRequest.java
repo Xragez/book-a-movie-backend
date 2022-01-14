@@ -8,6 +8,6 @@ import java.util.List;
 public class TicketRequest {
 
     private Long userId;
-    private List<SeatVIew> seats;
+    private List<String> seats;
     private Long showTimeId;
 }

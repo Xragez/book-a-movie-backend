@@ -22,4 +22,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username).orElseThrow();
         return userMapper.userDetails(user);
     }
+
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElseThrow();
+    }
 }

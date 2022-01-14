@@ -41,12 +41,14 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
         claims.put("userId", user.getId());
+        claims.put("firstName", user.getFirstName());
+        claims.put("surname", user.getSurname());
         return createToken(claims, userDetails.getUsername());
     }
 
     public Boolean validateToken(String token, UserDetails userDetails){
         val username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()));
     }
 
     private String createToken(Map<String, Object> claims, String subject){
