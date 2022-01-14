@@ -1,11 +1,11 @@
 package com.bookamovie.be.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -37,6 +37,8 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Column
+    @JsonManagedReference
     private Set<Ticket> tickets;
-    
+
 }
