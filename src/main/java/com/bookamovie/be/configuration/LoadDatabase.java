@@ -6,6 +6,8 @@ import com.bookamovie.be.entity.User;
 import com.bookamovie.be.repository.RoleRepository;
 import com.bookamovie.be.repository.SeatRepository;
 import com.bookamovie.be.repository.UserRepository;
+import com.bookamovie.be.service.AuthService;
+import com.bookamovie.be.view.UserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.slf4j.Logger;
@@ -26,6 +28,8 @@ public class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
     private final RoleRepository roleRepository;
     private final SeatRepository seatRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner initRoles(){
@@ -36,13 +40,16 @@ public class LoadDatabase {
     }
 
    @Bean
-   CommandLineRunner initSeats(){
+   CommandLineRunner initSeats() throws Exception {
         val letters = Arrays.asList("A", "B", "C", "D", "E");
         val numbers = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11");
-
         return args -> {
             letters.forEach(letter -> numbers.forEach(number ->
                     log.info("Preloading " + seatRepository.save(new Seat(letter + number)))));
+            log.info("Preloading " + userRepository.save(
+                    new User("Admin", "Admin", "admin",
+                            passwordEncoder.encode("admin"),
+                            Collections.singleton(roleRepository.findByName("ROLE_ADMIN").orElseThrow()))));
         };
    }
 }

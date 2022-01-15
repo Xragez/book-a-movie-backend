@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
@@ -40,5 +40,13 @@ public class User {
     @Column
     @JsonManagedReference
     private Set<Ticket> tickets;
+
+    public User(String firstName, String surname, String username, String password, Set<Role> roles){
+        this.firstName = firstName;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
 
 }
