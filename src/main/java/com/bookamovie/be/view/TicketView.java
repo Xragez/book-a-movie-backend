@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 public class TicketView {
+    private UserData userData;
     private List<SeatVIew> seats;
     private ShowTimeResponse showTime;
+    private String code;
 }

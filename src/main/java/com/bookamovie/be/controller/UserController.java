@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/showtime")
-    public ResponseEntity<List<ShowTimeResponse>> getShowTimesByMovieId(@RequestParam(required = false) String movieId,
+    public ResponseEntity<List<ShowTimeResponse>> getShowTimesByMovieId(@RequestParam(required = false) Long movieId,
                                                                         @RequestParam(required = false) String date) {
         val showTimes = showtimeService.getShowTimesByMovieIdOrDate(movieId, date);
         return new ResponseEntity<>(apiMapper.showTimeResponse(showTimes), HttpStatus.OK);
@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping("/showtime/hours")
     public ResponseEntity<ShowTimesResponse> getShowTimeHours(@RequestParam String date,
-                                                              @RequestParam(required = false) String movieId) {
+                                                              @RequestParam(required = false) Long movieId) {
 
         val result = showtimeService.getShowTimeHours(movieId, date);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -61,15 +61,15 @@ public class UserController {
     }
 
     @GetMapping("/tickets")
-    public ResponseEntity<TicektsResponse> getUserTickets(@RequestParam Long userId) {
-        val user = userService.getUserById(userId);
+    public ResponseEntity<TicketsResponse> getUserTickets() {
+        val user = userService.getUserById();
         return new ResponseEntity<>(apiMapper.ticketsResponse(user), HttpStatus.OK);
     }
 
     @GetMapping("/tickets/{id}")
     public ResponseEntity<TicketView> getTicketById(@PathVariable Long id) {
         val ticket = ticketService.getTicketById(id);
-        return new ResponseEntity<>(apiMapper.ticketResponse(ticket), HttpStatus.OK);
+        return new ResponseEntity<>(apiMapper.ticketView(ticket), HttpStatus.OK);
     }
 
     @GetMapping("/seats")

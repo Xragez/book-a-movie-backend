@@ -4,7 +4,10 @@ import com.bookamovie.be.entity.User;
 import com.bookamovie.be.mapper.UserMapper;
 import com.bookamovie.be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +26,10 @@ public class UserService implements UserDetailsService {
         return userMapper.userDetails(user);
     }
 
-    public User getUserById(Long id){
+    public User getUserById(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        val user = getUserByUsername(authentication.getName());
+        val id = user.getId();
         return userRepository.findById(id).orElseThrow();
     }
 

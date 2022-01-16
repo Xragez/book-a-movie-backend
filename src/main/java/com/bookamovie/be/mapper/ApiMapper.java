@@ -7,11 +7,11 @@ import com.bookamovie.be.entity.User;
 import com.bookamovie.be.view.*;
 import lombok.val;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface ApiMapper {
@@ -24,7 +24,7 @@ public interface ApiMapper {
 
     ShowTime showTime(ShowTimeRequest showTimeRequest);
 
-    TicketView ticketResponse(Ticket ticket);
+    TicketView ticketView(Ticket ticket);
 
     ShowTimesResponse showTimesResponse(Map<ShowTimeMovieData, List<ShowTimeHour>> showTimes);
 
@@ -42,19 +42,29 @@ public interface ApiMapper {
         return result;
     }
 
-    ShowTimeMovieData showTimeMovieData(String movieId, String movieTitle);
+    ShowTimeMovieData showTimeMovieData(Long movieId, String movieTitle);
 
-    ShowTimeHours showTimeHours(String movieId, String movieTitle, List<ShowTimeHour> hours);
+    ShowTimeHours showTimeHours(Long movieId, String movieTitle, List<ShowTimeHour> hours);
 
     ShowTimeHour showTimeHour(Long showTimeId, String hour);
 
-    TicektsResponse ticketsResponse(User user);
+    TicketsResponse ticketsResponse(User user);
+
+    default TicketsResponse ticketsResponse(List<Ticket> tickets){
+        val result = new TicketsResponse();
+        result.setTickets(ticketViewList(tickets));
+        return result;
+    }
 
     default SeatsResponse seatsResponse(List<Seat> seats){
         val result = new SeatsResponse();
         result.setSeats(seatViewList(seats));
         return result;
     }
+
+    @Mapping(target = "userData.firstName", source = "user.firstName")
+    @Mapping(target = "userData.surname", source = "user.surname")
+    List<TicketView> ticketViewList(List<Ticket> tickets);
 
     List<SeatVIew> seatViewList(List<Seat> seats);
 

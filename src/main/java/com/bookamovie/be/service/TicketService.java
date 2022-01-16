@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -28,9 +30,12 @@ public class TicketService {
         return ticketRepository.findById(id).orElseThrow();
     }
 
+    public List<Ticket> getAllTickets(){
+        return ticketRepository.findAll();
+    }
+
     public Ticket addTicket(TicketRequest ticketRequest) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
         val user = userService.getUserByUsername(authentication.getName());
         val seats = new HashSet<Seat>();
         ticketRequest.getSeats().forEach(seat -> seats.add(seatRepository.findByName(seat).orElseThrow()));
@@ -44,7 +49,26 @@ public class TicketService {
         ticket.setUser(user);
         ticket.setShowTime(showTime);
         ticket.setSeats(seats);
+        ticket.setCode(getUniqueCode(12));
         ticketRepository.save(ticket);
         return ticket;
+    }
+
+    private String getUniqueCode(int length){
+        String code;
+        do {
+            code = generateCode(length);
+        } while (ticketRepository.findByCode(code).isPresent());
+        return code;
+    }
+
+    private String generateCode(int length){
+        Random random = new Random();
+        return random.ints(48, 123)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
     }
 }

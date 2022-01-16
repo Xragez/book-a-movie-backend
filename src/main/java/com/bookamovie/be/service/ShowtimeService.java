@@ -25,7 +25,7 @@ public class ShowtimeService {
     private final ShowTimeRepository showTimeRepository;
     private final ApiMapper apiMapper;
 
-    public List<ShowTime> getShowTimesByMovieIdOrDate(String movieId, String date){
+    public List<ShowTime> getShowTimesByMovieIdOrDate(Long movieId, String date){
         val localDate = LocalDate.parse(date);
         List<ShowTime> showTimes = showTimeRepository.findAll();
         if (movieId != null) {
@@ -48,7 +48,7 @@ public class ShowtimeService {
         return seats;
     }
 
-    public ShowTimesResponse getShowTimeHours(String movieId, String date){
+    public ShowTimesResponse getShowTimeHours(Long movieId, String date){
         val localDate = LocalDate.parse(date);
         List<ShowTime> showTimes = showTimeRepository.findByDate(localDate).orElseThrow();
         val showTimesMap = new HashMap<ShowTimeMovieData, List<ShowTimeHour>>();

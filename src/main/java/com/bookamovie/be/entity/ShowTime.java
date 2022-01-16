@@ -20,7 +20,7 @@ public class ShowTime {
     private Long id;
 
     @Column(nullable = false)
-    private String movieId;
+    private Long movieId;
 
     @Column(nullable = false)
     private String movieTitle;

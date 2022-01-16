@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ShowTimeHour {
-    private String showTimeId;
+    private Long showTimeId;
     private String hour;
 }

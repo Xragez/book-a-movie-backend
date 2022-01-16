@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ShowTimeMovieData {
-    private String movieId;
+    private Long movieId;
     private String movieTitle;
 }
