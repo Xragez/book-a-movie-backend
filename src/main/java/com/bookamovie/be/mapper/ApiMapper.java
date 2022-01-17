@@ -24,6 +24,8 @@ public interface ApiMapper {
 
     ShowTime showTime(ShowTimeRequest showTimeRequest);
 
+    @Mapping(target = "userData.firstName", source = "user.firstName")
+    @Mapping(target = "userData.surname", source = "user.surname")
     TicketView ticketView(Ticket ticket);
 
     ShowTimesResponse showTimesResponse(Map<ShowTimeMovieData, List<ShowTimeHour>> showTimes);
@@ -62,8 +64,6 @@ public interface ApiMapper {
         return result;
     }
 
-    @Mapping(target = "userData.firstName", source = "user.firstName")
-    @Mapping(target = "userData.surname", source = "user.surname")
     List<TicketView> ticketViewList(List<Ticket> tickets);
 
     List<SeatVIew> seatViewList(List<Seat> seats);
